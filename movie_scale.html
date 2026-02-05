@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIE SCALE - Votre plateforme de notation de films</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Barre de navigation principale -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <h1>🎬 MOVIE SCALE</h1>
+            </div>
+            
+            <ul class="navbar-menu">
+                <li class="navbar-item">
+                    <a href="#" class="navbar-link">Accueil</a>
+                </li>
+                <li class="navbar-item dropdown">
+                    <a href="#" class="navbar-link dropdown-toggle">
+                        Films <span class="arrow">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="filtrerGenre('all')">Tous les films</a></li>
+                        <li><a href="#" onclick="filtrerGenre('comedie')">Comédies</a></li>
+                        <li><a href="#" onclick="filtrerGenre('action')">Action</a></li>
+                        <li><a href="#" onclick="filtrerGenre('horreur')">Horreur</a></li>
+                        <li><a href="#" onclick="filtrerGenre('fantastique')">Fantastique</a></li>
+                        <li><a href="#" onclick="filtrerGenre('sf')">Science-Fiction</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#top-all-time">Top Films All-Time</a></li>
+                        <li><a href="#top-semaine">Top de la Semaine</a></li>
+                    </ul>
+                </li>
+                <li class="navbar-item dropdown">
+                    <a href="#" class="navbar-link dropdown-toggle">
+                        Classements <span class="arrow">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="trierFilms('note')">Par Note</a></li>
+                        <li><a href="#" onclick="trierFilms('annee')">Par Année</a></li>
+                        <li><a href="#" onclick="trierFilms('critiques')">Par Popularité</a></li>
+                        <li><a href="#" onclick="trierFilms('titre')">Par Titre (A-Z)</a></li>
+                    </ul>
+                </li>
+                <li class="navbar-item">
+                    <a href="#catalogue" class="navbar-link">Catalogue</a>
+                </li>
+                <li class="navbar-item">
+                    <a href="#" onclick="afficherMesFilms()" class="navbar-link">Mes Films</a>
+                </li>
+            </ul>
+
+            <!-- Menu utilisateur -->
+            <div class="navbar-user">
+                <div id="user-dropdown" class="user-dropdown">
+                    <button class="user-btn" onclick="toggleUserMenu(event)">
+                        <span id="user-icon">👤</span>
+                        <span id="user-name">Connexion</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <ul class="dropdown-menu user-menu" id="user-menu">
+                        <li id="login-option"><a href="#" onclick="afficherConnexion(); return false;">Se connecter</a></li>
+                        <li id="register-option"><a href="#" onclick="afficherInscription(); return false;">S'inscrire</a></li>
+                        <!-- Options pour utilisateur connecté (cachées par défaut) -->
+                        <li id="profile-option" style="display:none;"><a href="#" onclick="afficherProfil(); return false;">Mon Profil</a></li>
+                        <li id="favorites-option" style="display:none;"><a href="#" onclick="afficherFavoris(); return false;">Mes Favoris</a></li>
+                        <li id="reviews-option" style="display:none;"><a href="#" onclick="afficherMesCritiques(); return false;">Mes Critiques</a></li>
+                        <li id="settings-option" style="display:none;"><a href="#" onclick="afficherParametres(); return false;">Paramètres</a></li>
+                        <li id="logout-option" style="display:none;" class="divider"><a href="#" onclick="deconnexion(); return false;">Déconnexion</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Menu hamburger pour mobile -->
+            <div class="navbar-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- En-tête du site -->
+    <header class="header">
+        <div class="header-content">
+            <h2>Découvrez, Notez, Partagez</h2>
+            <p>Votre avis compte dans la communauté cinéphile</p>
+        </div>
+    </header>
+
+    <!-- Zone de connexion/inscription (Modal) -->
+    <div class="modal" id="auth-modal">
+        <div class="modal-content auth-modal-content">
+            <span class="close" onclick="fermerAuthModal()">&times;</span>
+            
+            <!-- Formulaire de connexion -->
+            <div class="auth-box" id="login-box">
+                <h2>Connexion</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email ou nom d'utilisateur</label>
+                        <input type="text" id="login-email" placeholder="exemple@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" placeholder="Votre mot de passe" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember-me">
+                            <span>Se souvenir de moi</span>
+                        </label>
+                        <a href="#" class="forgot-link" onclick="afficherMotDePasseOublie()">Mot de passe oublié ?</a>
+                    </div>
+                    <button type="submit" class="auth-btn">Se connecter</button>
+                </form>
+                <div class="auth-divider">
+                    <span>OU</span>
+                </div>
+                <div class="social-auth">
+                    <button class="social-btn google" onclick="connexionGoogle()">
+                        <span>🔍</span> Continuer avec Google
+                    </button>
+                    <button class="social-btn facebook" onclick="connexionFacebook()">
+                        <span>📘</span> Continuer avec Facebook
+                    </button>
+                </div>
+                <p class="auth-link">
+                    Pas encore de compte ? <a href="#" onclick="basculerVersInscription()">Créer un compte</a>
+                </p>
+            </div>
+
+            <!-- Formulaire d'inscription -->
+            <!-- Formulaire d'inscription (version PHP) -->
+<div class="auth-box" id="register-box" style="display: none;">
+  <h2>Créer un compte</h2>
+
+  <!-- Message d'erreur / succès venant de PHP -->
+  <?php if (!empty($_GET['msg'])): ?>
+    <div class="php-message">
+      <?= htmlspecialchars($_GET['msg']) ?>
+    </div>
+  <?php endif; ?>
+
+  <form id="register-form" method="POST" action="register.php">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="register-prenom">Prénom</label>
+        <input type="text" id="register-prenom" name="prenom"
+               placeholder="Votre prénom" required>
+      </div>
+      <div class="form-group">
+        <label for="register-nom">Nom</label>
+        <input type="text" id="register-nom" name="nom"
+               placeholder="Votre nom" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="register-username">Nom d'utilisateur</label>
+      <input type="text" id="register-username" name="username"
+             placeholder="Choisissez un nom d'utilisateur" required>
+      <small class="form-hint">Ce nom sera visible publiquement</small>
+    </div>
+
+    <div class="form-group">
+      <label for="register-email">Email</label>
+      <input type="email" id="register-email" name="email"
+             placeholder="votre@email.com" required>
+    </div>
+
+    <div class="form-group">
+      <label for="register-password">Mot de passe</label>
+      <input type="password" id="register-password" name="password"
+             placeholder="Minimum 8 caractères" required minlength="8">
+      <div class="password-strength" id="password-strength">
+        <div class="strength-bar"></div>
+      </div>
+      <small class="form-hint">
+        Au moins 8 caractères avec majuscules et chiffres
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="register-confirm">Confirmer le mot de passe</label>
+      <input type="password" id="register-confirm" name="confirm_password"
+             placeholder="Retapez votre mot de passe" required>
+    </div>
+
+    <div class="form-group">
+      <label for="register-date">Date de naissance</label>
+      <input type="date" id="register-date" name="date_naissance" max="2013-01-01">
+      <small class="form-hint">Vous devez avoir au moins 13 ans</small>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-container">
+        <input type="checkbox" id="register-terms" name="terms" required>
+        <span>J'accepte les
+          <a href="#" onclick="afficherCGU();return false;">conditions d'utilisation</a>
+          et la
+          <a href="#" onclick="afficherConfidentialite();return false;">
+            politique de confidentialité
+          </a>
+        </span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-container">
+        <input type="checkbox" id="register-newsletter" name="newsletter">
+        <span>Je souhaite recevoir les nouveautés et offres par email</span>
+      </label>
+    </div>
+
+    <button type="submit" class="auth-btn">Créer mon compte</button>
+  </form>
+
+  <p class="auth-link">
+    Vous avez déjà un compte ?
+    <a href="#" onclick="basculerVersConnexion();return false;">Se connecter</a>
+  </p>
+</div>
+
+
+            <!-- Formulaire mot de passe oublié -->
+            <div class="auth-box" id="forgot-box" style="display: none;">
+                <h2>Mot de passe oublié</h2>
+                <p class="forgot-description">Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+                <form id="forgot-form">
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <input type="email" id="forgot-email" placeholder="votre@email.com" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Envoyer le lien</button>
+                </form>
+                <p class="auth-link">
+                    <a href="#" onclick="basculerVersConnexion()">← Retour à la connexion</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <section class="search-filter-section">
+        <div class="container">
+            <div class="search-bar">
+                <input type="search" id="searchInput" placeholder="🔍 Rechercher un film par titre...">
+            </div>
+            
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label>Trier par :</label>
+                    <select id="sort-select" onchange="trierFilmsSelect(this.value)">
+                        <option value="note">Note (décroissant)</option>
+                        <option value="note-asc">Note (croissant)</option>
+                        <option value="annee">Année (récent)</option>
+                        <option value="annee-asc">Année (ancien)</option>
+                        <option value="titre">Titre (A-Z)</option>
+                        <option value="titre-desc">Titre (Z-A)</option>
+                        <option value="critiques">Popularité</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Genre :</label>
+                    <select id="genre-select" onchange="filtrerGenreSelect(this.value)">
+                        <option value="all">Tous les genres</option>
+                        <option value="comedie">Comédie</option>
+                        <option value="action">Action</option>
+                        <option value="horreur">Horreur</option>
+                        <option value="fantastique">Fantastique</option>
+                        <option value="sf">Science-Fiction</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Année :</label>
+                    <select id="year-select" onchange="filtrerAnnee(this.value)">
+                        <option value="all">Toutes les années</option>
+                        <option value="2020s">2020+</option>
+                        <option value="2010s">2010-2019</option>
+                        <option value="2000s">2000-2009</option>
+                        <option value="1990s">1990-1999</option>
+                        <option value="1980s">1980-1989</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Note minimum :</label>
+                    <select id="rating-select" onchange="filtrerNote(this.value)">
+                        <option value="0">Toutes les notes</option>
+                        <option value="4.5">4.5+ ⭐</option>
+                        <option value="4.0">4.0+ ⭐</option>
+                        <option value="3.5">3.5+ ⭐</option>
+                        <option value="3.0">3.0+ ⭐</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Top Films All-Time -->
+    <section class="top-section" id="top-all-time">
+        <div class="container">
+            <h3>🏆 Top 3 Films All-Time</h3>
+            <div class="top-films">
+                <div class="top-card gold">
+                    <span class="position">1</span>
+                    <div class="top-card-content">
+                        <h4>Inception</h4>
+                        <p class="note">⭐ 4.8/5</p>
+                        <p class="reviews-count">42 critiques</p>
+                        <button onclick="voirDetails(1)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+                <div class="top-card silver">
+                    <span class="position">2</span>
+                    <div class="top-card-content">
+                        <h4>The Dark Knight</h4>
+                        <p class="note">⭐ 4.7/5</p>
+                        <p class="reviews-count">58 critiques</p>
+                        <button onclick="voirDetails(2)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+                <div class="top-card bronze">
+                    <span class="position">3</span>
+                    <div class="top-card-content">
+                        <h4>Interstellar</h4>
+                        <p class="note">⭐ 4.6/5</p>
+                        <p class="reviews-count">35 critiques</p>
+                        <button onclick="voirDetails(3)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Top de la semaine -->
+    <section class="top-section weekly" id="top-semaine">
+        <div class="container">
+            <h3>📅 Top 3 Films de la Semaine</h3>
+            <div class="top-films">
+                <div class="top-card">
+                    <span class="position">1</span>
+                    <div class="top-card-content">
+                        <h4>Get Out</h4>
+                        <p class="note">⭐ 4.5/5</p>
+                        <p class="reviews-count">12 critiques cette semaine</p>
+                        <button onclick="voirDetails(9)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+                <div class="top-card">
+                    <span class="position">2</span>
+                    <div class="top-card-content">
+                        <h4>Pulp Fiction</h4>
+                        <p class="note">⭐ 4.5/5</p>
+                        <p class="reviews-count">8 critiques cette semaine</p>
+                        <button onclick="voirDetails(4)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+                <div class="top-card">
+                    <span class="position">3</span>
+                    <div class="top-card-content">
+                        <h4>The Matrix</h4>
+                        <p class="note">⭐ 4.7/5</p>
+                        <p class="reviews-count">15 critiques cette semaine</p>
+                        <button onclick="voirDetails(8)" class="btn-details">Voir détails</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des films -->
+    <main class="main-content" id="catalogue">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">📚 Catalogue de Films</h2>
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="changerVue('grid')" id="grid-btn">
+                        <span>▦</span> Grille
+                    </button>
+                    <button class="view-btn" onclick="changerVue('list')" id="list-btn">
+                        <span>☰</span> Liste
+                    </button>
+                </div>
+            </div>
+            <div class="film-liste grid-view" id="film-liste">
+                <!-- Les films seront ajoutés ici par JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal pour noter un film -->
+    <div id="modal-notation" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fermerModal()">&times;</span>
+            <h3 id="modal-titre">Noter le film</h3>
+            <div class="etoiles">
+                <span class="etoile" onclick="noterFilm(1)">★</span>
+                <span class="etoile" onclick="noterFilm(2)">★</span>
+                <span class="etoile" onclick="noterFilm(3)">★</span>
+                <span class="etoile" onclick="noterFilm(4)">★</span>
+                <span class="etoile" onclick="noterFilm(5)">★</span>
+            </div>
+            <p class="note-label">Votre note : <span id="note-value">0</span>/5</p>
+            <textarea id="critique" placeholder="Écrivez votre critique ici... (optionnel)" rows="5"></textarea>
+            <button onclick="publierCritique()" class="btn-publier">Publier ma critique</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>MOVIE SCALE</h4>
+                    <p>Votre plateforme de notation et critique de films</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="#top-all-time">Top Films</a></li>
+                        <li><a href="#catalogue">Catalogue</a></li>
+                        <li><a href="#" onclick="afficherAPropos()">À propos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Suivez-nous</h4>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="Instagram">📷</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Movie Scale. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="javascript.js"></script>
+</body>
+</html>
