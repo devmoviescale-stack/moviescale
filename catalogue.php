@@ -42,7 +42,7 @@ $films = $stmt->fetchAll();
 <?php include "nav.php"; ?>
 
 <div class="page-header">
-    <h1>Catalogue de caca films</h1>
+    <h1>Catalogue de films</h1>
     <p><?= count($films) ?> film(s) disponible(s)</p>
 </div>
 
