@@ -23,7 +23,7 @@ $derniers_films = $stmt->fetchAll();
 <?php include "nav.php"; ?>
 
 <div class="page-header">
-    <h1> hehehe MovieScale</h1>
+    <h1> hehehehe MovieScale</h1>
     <p>Notez et critiquez vos films préférés</p>
 </div>
 
